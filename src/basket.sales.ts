@@ -24,3 +24,36 @@ export class BuyOneGetOneFree implements SalesRule {
     return freeItems * price;
   }
 }
+
+// - 10% off a given article
+// ```
+// # 10Percent A0001
+// basket.scan("A0002")
+// basket.scan("A0001")
+// basket.scan("A0002")
+// basket.total
+// => 19.67
+// ```
+export class PercentOff implements SalesRule {
+  private readonly code: ProductCode;
+  private readonly percent: number;
+
+  constructor(code: ProductCode, percent: number) {
+    if (percent <= 0 || percent >= 100) {
+      throw new Error("percent must be between 0 and 100");
+    }
+    this.code = code;
+    this.percent = percent;
+  }
+
+  getDiscount({ basketItems, inventoryItems }: SalesData) {
+    const count = basketItems.get(this.code) ?? 0;
+    if (count === 0) return 0;
+
+    const price = inventoryItems.get(this.code);
+    if (price === undefined) return 0;
+
+    const discountPerItem = (this.percent / 100) * price;
+    return discountPerItem * count;
+  }
+}

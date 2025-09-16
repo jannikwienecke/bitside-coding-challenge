@@ -28,11 +28,11 @@ export class Basket implements BasketInterface {
       return totalDiscount + discount;
     }, 0);
 
-    const sumAfterDiscount = sum - discount;
+    // reduce and round to 2 decimal places
+    const sumAfterDiscount = Math.round((sum - discount) * 100) / 100;
     console.log(`Basket.Total: Total price is ${sumAfterDiscount}`);
 
-    // round to 2 decimal places
-    return Math.round(sumAfterDiscount * 100) / 100;
+    return sumAfterDiscount;
   }
 
   scan(productCode: ProductCode) {
