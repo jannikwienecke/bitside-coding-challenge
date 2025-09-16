@@ -2,7 +2,7 @@ import { describe, it, expect } from "vitest";
 import { Basket } from "./Basket";
 import { DEFAULT_INVENTORY } from "./constants";
 import { SalesRule } from "./types";
-import { BuyOneGetOneFree } from "./basket.sales";
+import { BuyOneGetOneFree, PercentOff } from "./basket.sales";
 
 describe("Basket", () => {
   it("can add products to the basket and calculate the total price", () => {
@@ -34,5 +34,30 @@ describe("Basket", () => {
     basket.scan("A0002");
     // second A0002 should be free -> price remains 16.98
     expect(basket.total()).toBe(16.98);
+  });
+
+  it("can apply the PerentOff rule to the basket", () => {
+    const salesRules: SalesRule[] = [new PercentOff("A0001", 10)];
+    const basket = new Basket(DEFAULT_INVENTORY, salesRules);
+
+    basket.scan("A0002");
+    basket.scan("A0001");
+    basket.scan("A0002");
+
+    expect(basket.total()).toBe(19.67);
+  });
+
+  it("can apply multiple rules to the basket", () => {
+    const salesRules: SalesRule[] = [
+      new PercentOff("A0001", 10),
+      new BuyOneGetOneFree("A0002"),
+    ];
+    const basket = new Basket(DEFAULT_INVENTORY, salesRules);
+
+    basket.scan("A0002");
+    basket.scan("A0001");
+    basket.scan("A0002");
+
+    expect(basket.total()).toBe(15.68);
   });
 });
