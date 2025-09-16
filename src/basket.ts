@@ -30,7 +30,9 @@ export class Basket implements BasketInterface {
 
     const sumAfterDiscount = sum - discount;
     console.log(`Basket.Total: Total price is ${sumAfterDiscount}`);
-    return sumAfterDiscount;
+
+    // round to 2 decimal places
+    return Math.round(sumAfterDiscount * 100) / 100;
   }
 
   scan(productCode: ProductCode) {
