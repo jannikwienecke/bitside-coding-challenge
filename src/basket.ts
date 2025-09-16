@@ -1,11 +1,13 @@
-import { BasketInterface, ItemsMap, ProductCode } from "./types";
+import { BasketInterface, ItemsMap, ProductCode, SalesRule } from "./types";
 
 export class Basket implements BasketInterface {
   private readonly inventory: ItemsMap;
   private readonly basketItems: ItemsMap = new Map();
+  private readonly salesRules: SalesRule[] = [];
 
-  constructor(inventory: ItemsMap) {
+  constructor(inventory: ItemsMap, salesRules: SalesRule[] = []) {
     this.inventory = inventory;
+    this.salesRules = salesRules;
   }
 
   total() {
@@ -17,8 +19,18 @@ export class Basket implements BasketInterface {
       return sum + price * count;
     }, 0);
 
-    console.log(`Basket.Total: Total price is ${sum}`);
-    return sum;
+    const discount = this.salesRules.reduce((totalDiscount, rule) => {
+      const discount = rule.getDiscount({
+        inventoryItems: this.inventory,
+        basketItems: this.basketItems,
+      });
+
+      return totalDiscount + discount;
+    }, 0);
+
+    const sumAfterDiscount = sum - discount;
+    console.log(`Basket.Total: Total price is ${sumAfterDiscount}`);
+    return sumAfterDiscount;
   }
 
   scan(productCode: ProductCode) {

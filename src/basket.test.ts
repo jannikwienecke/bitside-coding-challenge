@@ -1,6 +1,6 @@
 import { describe, it, expect } from "vitest";
 import { Basket } from "./Basket";
-import { DEFAULT_INVENTORY } from "./main";
+import { DEFAULT_INVENTORY } from "./constants";
 
 describe("Basket", () => {
   it("can add products to the basket and calculate the total price", () => {

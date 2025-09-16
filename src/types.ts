@@ -6,3 +6,12 @@ export type BasketInterface = {
 };
 
 export type ItemsMap = Map<ProductCode, number>;
+
+export type SalesData = {
+  inventoryItems: ItemsMap;
+  basketItems: ItemsMap;
+};
+
+export type SalesRule = {
+  getDiscount: (salesData: SalesData) => number;
+};

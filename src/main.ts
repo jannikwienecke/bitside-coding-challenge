@@ -1,16 +1,14 @@
 import { Basket } from "./Basket";
-import { ItemsMap } from "./types";
-
-export const DEFAULT_INVENTORY: ItemsMap = new Map([
-  ["A0001", 12.99],
-  ["A0002", 3.99],
-]);
+import { BuyOneGetOneFree } from "./basket.sales";
+import { DEFAULT_INVENTORY } from "./constants";
 
 export const main = () => {
   console.log("Main: Start Shopping Basket");
-  const basket = new Basket(DEFAULT_INVENTORY);
+  const salesRules = [new BuyOneGetOneFree("A0002")];
+  const basket = new Basket(DEFAULT_INVENTORY, salesRules);
 
   basket.scan("A0001");
+  basket.scan("A0002");
   basket.scan("A0002");
 
   basket.total();
